@@ -15,6 +15,7 @@ export interface RegistrationChallenge {
 }
 
 export interface RegistrationResponse {
+	challenge: string;
 	credentialId: string;
 	response: {
 		clientDataJSON: string;
@@ -39,23 +40,25 @@ export function convertRegistrationChallenge(
 		},
 		// excludeCredentials: [],
 		pubKeyCredParams: input.pubKeyCredParams,
-		// authenticatorSelection: {
-		//     // authenticatorAttachment: 'cross-platform',
-		//     userVerification: 'preferred',
-		//     requireResidentKey: false,
-		// },
+		authenticatorSelection: {
+			authenticatorAttachment: 'cross-platform',
+			userVerification: 'preferred',
+			requireResidentKey: false,
+		},
 		challenge: codec.decode(input.challenge),
 	};
 }
 
 export function convertRegistrationResponse(
 	cred: PublicKeyCredential,
+	challenge: string,
 	codec: Codec
 ): RegistrationResponse {
 	const response = cred.response as AuthenticatorAttestationResponse;
 	const publicKey = response.getPublicKey();
 	if (!publicKey) throw new Error('no public key found');
 	return {
+		challenge,
 		credentialId: codec.encode(cred.rawId),
 		response: {
 			clientDataJSON: codec.encode(response.clientDataJSON),

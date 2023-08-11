@@ -42,7 +42,11 @@ export class WebAuthnClient {
 			throw new Error('invalid credential');
 
 		// Convert the credential into a RegistrationResponse
-		return convertRegistrationResponse(cred, this.codec);
+		return convertRegistrationResponse(
+			cred,
+			challenge.challenge,
+			this.codec
+		);
 	}
 
 	public async authenticate(
@@ -59,6 +63,10 @@ export class WebAuthnClient {
 			throw new Error('invalid credential assertion');
 
 		// Convert the credential into an AuthenticationResponse
-		return convertAuthenticationResponse(assertion, this.codec);
+		return convertAuthenticationResponse(
+			assertion,
+			challenge.challenge,
+			this.codec
+		);
 	}
 }

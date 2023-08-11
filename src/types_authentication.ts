@@ -7,6 +7,7 @@ export interface AuthenticationChallenge {
 }
 
 export interface AuthenticationResponse {
+	challenge: string;
 	credentialId: string;
 	response: {
 		authenticatorData: string;
@@ -37,10 +38,12 @@ export function convertAuthenticationChallenge(
 
 export function convertAuthenticationResponse(
 	cred: PublicKeyCredential,
+	challenge: string,
 	codec: Codec
 ): AuthenticationResponse {
 	const response = cred.response as AuthenticatorAssertionResponse;
 	return {
+		challenge,
 		credentialId: codec.encode(cred.rawId),
 		response: {
 			authenticatorData: codec.encode(response.authenticatorData),
