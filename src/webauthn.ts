@@ -44,6 +44,7 @@ export class WebAuthnClient {
 		// Convert the credential into a RegistrationResponse
 		return convertRegistrationResponse(
 			cred,
+			challenge.token,
 			challenge.challenge,
 			this.codec
 		);
@@ -65,6 +66,7 @@ export class WebAuthnClient {
 		// Convert the credential into an AuthenticationResponse
 		return convertAuthenticationResponse(
 			assertion,
+			challenge.token,
 			challenge.challenge,
 			this.codec
 		);

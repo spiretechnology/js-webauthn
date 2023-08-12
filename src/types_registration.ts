@@ -1,6 +1,7 @@
 import { Codec } from './codec';
 
 export interface RegistrationChallenge {
+	token: string;
 	challenge: string;
 	rp: {
 		id: string;
@@ -15,6 +16,7 @@ export interface RegistrationChallenge {
 }
 
 export interface RegistrationResponse {
+	token: string;
 	challenge: string;
 	credentialId: string;
 	response: {
@@ -50,11 +52,13 @@ export function convertRegistrationChallenge(
 
 export function convertRegistrationResponse(
 	cred: PublicKeyCredential,
+	token: string,
 	challenge: string,
 	codec: Codec
 ): RegistrationResponse {
 	const response = cred.response as AuthenticatorAttestationResponse;
 	return {
+		token,
 		challenge,
 		credentialId: codec.encode(cred.rawId),
 		response: {

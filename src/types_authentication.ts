@@ -1,12 +1,14 @@
 import { Codec } from './codec';
 
 export interface AuthenticationChallenge {
+	token: string;
 	challenge: string;
 	rpId: string;
 	allowCredentials: { type: 'public-key'; id: string }[];
 }
 
 export interface AuthenticationResponse {
+	token: string;
 	challenge: string;
 	credentialId: string;
 	response: {
@@ -38,11 +40,13 @@ export function convertAuthenticationChallenge(
 
 export function convertAuthenticationResponse(
 	cred: PublicKeyCredential,
+	token: string,
 	challenge: string,
 	codec: Codec
 ): AuthenticationResponse {
 	const response = cred.response as AuthenticatorAssertionResponse;
 	return {
+		token,
 		challenge,
 		credentialId: codec.encode(cred.rawId),
 		response: {
