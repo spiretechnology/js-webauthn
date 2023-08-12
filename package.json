@@ -17,7 +17,7 @@
 		"test": "jest",
 		"docs": "typedoc --excludePrivate --excludeProtected src/index.ts",
 		"clean": "rm -rf dist",
-		"prepare": "npm run clean && npm run build"
+		"prepare": "npm run clean && npm run build && npm run build:browser"
 	},
 	"keywords": [
 		"webauthn"
