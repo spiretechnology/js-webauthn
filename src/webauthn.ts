@@ -13,20 +13,8 @@ import {
 	convertRegistrationResponse,
 } from './types_registration';
 
-type CreateCredentialFunc = (
-	options: CredentialCreationOptions
-) => Promise<Credential | null>;
-type GetCredentialFunc = (
-	options: CredentialRequestOptions
-) => Promise<Credential | null>;
-
 export class WebAuthnClient {
-	public constructor(
-		private codec: Codec = Base64URL,
-		private createCredential: CreateCredentialFunc = navigator.credentials
-			.create,
-		private getCredential: GetCredentialFunc = navigator.credentials.get
-	) {}
+	public constructor(private codec: Codec = Base64URL) {}
 
 	public async register(
 		challenge: RegistrationChallenge,
@@ -37,7 +25,7 @@ export class WebAuthnClient {
 		options.timeout = timeout;
 
 		// Create the credential
-		const cred = await this.createCredential({ publicKey: options });
+		const cred = await navigator.credentials.create({ publicKey: options });
 		if (!cred || !(cred instanceof PublicKeyCredential))
 			throw new Error('invalid credential');
 
@@ -59,7 +47,9 @@ export class WebAuthnClient {
 		options.timeout = timeout;
 
 		// Get a credential and a signed challenge
-		const assertion = await this.getCredential({ publicKey: options });
+		const assertion = await navigator.credentials.get({
+			publicKey: options,
+		});
 		if (!assertion || !(assertion instanceof PublicKeyCredential))
 			throw new Error('invalid credential assertion');
 
