@@ -21,8 +21,6 @@ export interface RegistrationResponse {
 		clientDataJSON: string;
 		attestationObject: string;
 	};
-	publicKey: string;
-	publicKeyAlg: number;
 }
 
 export function convertRegistrationChallenge(
@@ -40,6 +38,7 @@ export function convertRegistrationChallenge(
 		},
 		// excludeCredentials: [],
 		pubKeyCredParams: input.pubKeyCredParams,
+		attestation: 'direct',
 		// authenticatorSelection: {
 		// 	authenticatorAttachment: 'cross-platform',
 		// 	userVerification: 'preferred',
@@ -55,8 +54,6 @@ export function convertRegistrationResponse(
 	codec: Codec
 ): RegistrationResponse {
 	const response = cred.response as AuthenticatorAttestationResponse;
-	const publicKey = response.getPublicKey();
-	if (!publicKey) throw new Error('no public key found');
 	return {
 		challenge,
 		credentialId: codec.encode(cred.rawId),
@@ -64,7 +61,5 @@ export function convertRegistrationResponse(
 			clientDataJSON: codec.encode(response.clientDataJSON),
 			attestationObject: codec.encode(response.attestationObject),
 		},
-		publicKey: codec.encode(publicKey),
-		publicKeyAlg: response.getPublicKeyAlgorithm(),
 	};
 }
